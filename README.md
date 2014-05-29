@@ -14,8 +14,12 @@ Slab is made to solve 2 problems
 Guid to setup dev env
 1. install phonegap
 	npm install -g phonegap
+
 2. install android-sdk to deploy to android (Make sure to install SDK platform for API 19 through eclipse -> window -> sdk manager)
+
 3. export android paths for phonegap
 	export PATH=${PATH}:/home/trevor/workspace/androidLib/sdk/platform-tools:/home/trevor/workspace/androidLib/sdk/tools
+
 4. install nodejs
+
 5. have fun
