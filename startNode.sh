@@ -1,1 +1,2 @@
-nodemon --harmony server/app.js
+cd server
+nodemon --harmony app.js

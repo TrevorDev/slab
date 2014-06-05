@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
 
 {% block includeScript %}
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+</script>
 {% endblock %}
 
 {% block body %}

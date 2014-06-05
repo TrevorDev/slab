@@ -16,6 +16,7 @@
 		"co-views": "x.x",
 		"co-body": "x.x",
 		"koa": "x.x",
+		"koa-cors": "x.x",
 		"koa-logger": "x.x",
 		"koa-route": "x.x",
 		"koa-router": "x.x",

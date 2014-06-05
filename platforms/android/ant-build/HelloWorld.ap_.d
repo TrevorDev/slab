@@ -26,6 +26,7 @@
 /home/trevor/workspace/slab/platforms/android/assets/www/icon.png \
 /home/trevor/workspace/slab/platforms/android/assets/www/phonegap.js \
 /home/trevor/workspace/slab/platforms/android/assets/www/spec.html \
+/home/trevor/workspace/slab/platforms/android/assets/www/js/socketio.js \
 /home/trevor/workspace/slab/platforms/android/assets/www/js/index.js \
 /home/trevor/workspace/slab/platforms/android/assets/www/img/logo2.png \
 /home/trevor/workspace/slab/platforms/android/assets/www/img/logo.png \
