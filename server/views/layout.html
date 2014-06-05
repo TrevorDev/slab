@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/public/vendor/blacktie/img/favicon.png">
+
+    <title>Slab</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/public/vendor/blacktie/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/public/vendor/blacktie/css/main.css" rel="stylesheet">
+    <link href="/public/custom/css/main.css" rel="stylesheet">
+
+    <!-- Fonts from Google Fonts -->
+  	<link href='/public/vendor/google/css/LatoFonts.css' rel='stylesheet' type='text/css'>
+	
+    <script src="/public/vendor/jquery/js/jquery.min.js"></script>
+    <script src="/public/vendor/jquery-ui/js/jquery-ui-1.9.2.min.js"></script>
+    <script src="/public/vendor/angular/angular.min.js"></script>
+    <script src="/public/vendor/angular-encode-uri/angular-encode-uri.min.js"></script>
+    <script type="text/javascript">
+      var myApp = angular.module('myApp', ['rt.encodeuri'], function ($interpolateProvider) {
+          $interpolateProvider.startSymbol('[[');
+          $interpolateProvider.endSymbol(']]');
+      });
+
+      myApp.filter('createAnchors', function ($sce) {
+        return function (str) {
+          //TODO make sure this is safe to use raw
+          return $sce.trustAsHtml(str.
+            replace(/</g, '&lt;').
+            replace(/>/g, '&gt;').
+            replace(/(https?:\/\/)?([^\s]+\.(com|net|ca|us|org|co)[^\s]*)/g, '<a href="http://$2">$2</a>').
+            replace(/\s@([^\s]+)/g, '<a href="http://twitter.com/$1">@$1</a>')
+           );
+        }
+      })
+    </script>
+        
+  </head>
+
+    <body>
+
+  	{% block body %}{% endblock %}
+  
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+	<script src="/public/custom/js/util.js"></script>
+	<script src="/public/vendor/blacktie/js/bootstrap.min.js"></script>
+	<script src="/public/vendor/foxycomplete/js/jquery.autocomplete.js"></script>
+	<script src="/public/vendor/foxycomplete/js/data.js"></script>
+	<script src="/public/vendor/foxycomplete/js/foxycomplete.js"></script>
+
+  {% block includeScript %}{% endblock %}
+  </body>
+</html>
