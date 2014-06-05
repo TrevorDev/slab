@@ -24,3 +24,5 @@ Built with PhoneGap, NodeJS and SocketIO
 * install nodejs
 
 * have fun
+
+* use xdotool to move mouse/keyboard input
