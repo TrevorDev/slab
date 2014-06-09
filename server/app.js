@@ -16,7 +16,9 @@ var request = require('request');
 var fs = require('fs')
 var cors = require('koa-cors');
 var thunkify = require('thunkify');
+var exec = require('child_process').exec;
 var app = koa()
+
 
 //REMOVE IN PRODUCTION??
 swig.setDefaults(config.templateOptions)
@@ -67,13 +69,12 @@ console.log('Started ----------------------------------------------')
 
 
 
-var io = require('socket.io')(server);
+/*var io = require('socket.io')(server);
 
-var exec = require('child_process').exec;
 
 io.on('connection', function(socket){
 	console.log("hits");
-	/*exec('amixer -D pulse sset Master 5%+', function (error, stdout, stderr) {
+	exec('amixer -D pulse sset Master 5%+', function (error, stdout, stderr) {
 		
-	});*/
-});
+	});
+});*/
