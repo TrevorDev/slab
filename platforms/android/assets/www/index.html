@@ -36,43 +36,32 @@
         <section>
             <ul class="list">
             <li>
-            <input type="text" placeholder="Server address (eg. 192.168.0.1:3000)" style="width: 100%">
+            <input type="text" id="serverAddress" placeholder="Server address (eg. 192.168.0.1:3000)" style="width: 100%" value="192.168.1.4:3000">
             </li>
-            <li class='nav' data-goto='display'>
+            <li class='nav' id="connectButton">
             <h3>Connect</h3>
             </li>
             </ul>
 
-            <ul class="list">
+            <!--<ul class="list">
             <li>
             <h4>Found Connections:</h4>
             </li>
             <li class='nav' data-goto='display'>
             <h3>192.168.2.1</h3>
             </li>
-            </ul>
+            </ul>-->
 
         </section>
         </article>
 
         <nav class="next">
             <a href="#" class="button back">Back</a>
-            <h1>Apples</h1>
+            <h1>Controls</h1>
         </nav>
         <article id="display" class="next">
-            <section>
-            <h2>Uses</h2>
-            <ul class="list">
-            <li>
-            <h3>Juice</h3>
-            </li>
-            <li>
-            <h3>Pastries</h3>
-            </li>
-            <li>
-            <h3>Cider</h3>
-            </li>
-            </ul>
+            <section id="displayUI">
+            
             </section>
         </article>
     </body>
@@ -84,19 +73,32 @@
     <script type="text/javascript">
         app.initialize();
     </script>
-
-    <!--<script src="js/socketio.js"></script>
     <script>
-    var socket = io();
-    </script>-->
-      
-
-    <script>
-        /*$('#rangeControl1').on("change", function() {
-            $.post( "http://192.168.1.2:3000", { type: "volume" ,val: $(this).val() }, function( data ) {
-                console.log( data );
-            }, "json");
-            //$(this).next().html($(this).val());
-        });*/
+        $("#connectButton").on("singletap", function() {
+            $.get( "http://"+$("#serverAddress").val()+"/html", function( resp ) {
+                var serverAddress = $("#serverAddress").val();
+                $("#displayUI").html(resp.data.html)
+                $.UIGoToArticle("#display")
+                resp.data.controls.forEach(function(control){
+                    if(control.type == "range"){
+                        var currentVal = 0
+                        $('#'+control.id).on("change mousemove", function() {
+                            if(currentVal != $(this).val()){
+                                currentVal = $(this).val()
+                                $.post( "http://"+serverAddress, { id: control.id ,val: $(this).val() }, function( data ) {
+                                }, "json");
+                            }
+                        });
+                    }else if(control.type == "button"){
+                        $('#'+control.id).on("click", function() {
+                            $.post( "http://"+serverAddress, { id: control.id ,val: $(this).val() }, function( data ) {
+                            }, "json");
+                        });
+                    }
+                })
+            }).fail(function(){
+                alert("Unable to connect :(");
+            });
+        });
     </script>
 </html>
