@@ -100,6 +100,62 @@
                             $('#'+control.id).on("click", function() {
                                 socket.emit('event', {id: control.id ,val: $(this).val()});
                             });
+                        }else if(control.type == "touch"){
+                            var currentX = 0;
+                            var currentY = 0;
+                            $('#'+control.id).on('touchstart',function(e){
+                                e.preventDefault();
+                                  var x=0;
+                                  var y=0;
+                                  if(e.originalEvent.touches || e.originalEvent.changedTouches){
+                                    var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+                                    x=touch.pageX;
+                                    y=touch.pageY;
+
+                                  }else{
+                                    x = e.clientX;
+                                    y = e.clientY;
+                                  }
+                                  currentX = x;
+                                  currentY = y;
+                            });
+                            $('#'+control.id).on('mousemove touchmove',function(e){
+                                  e.preventDefault();
+                                  var x=0;
+                                  var y=0;
+                                  if(e.originalEvent.touches || e.originalEvent.changedTouches){
+                                    var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+                                    x=touch.pageX;
+                                    y=touch.pageY;
+
+                                  }else{
+                                    x = e.clientX;
+                                    y = e.clientY;
+                                  }
+                                  var changeX = x - currentX;
+                                  var changeY = y - currentY;
+                                  currentX = x;
+                                  currentY = y;
+                                  socket.emit('event', {id: control.id ,val: {x: changeX, y: changeY}});
+                            });
+                        }else if(control.type == "form"){
+                            $('#'+control.id).on("submit", function(e) {
+                                e.preventDefault();
+
+
+                                var eventVal = {};
+                                $.each($('#'+control.id).serializeArray(), function(_, kv) {
+                                  if (eventVal.hasOwnProperty(kv.name)) {
+                                    eventVal[kv.name] = $.makeArray(eventVal[kv.name]);
+                                    eventVal[kv.name].push(kv.value);
+                                  }
+                                  else {
+                                    eventVal[kv.name] = kv.value;
+                                  }
+                                });
+
+                                socket.emit('event', {id: control.id ,val: eventVal});
+                            });
                         }
                     })
                 });
