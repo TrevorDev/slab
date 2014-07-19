@@ -33,7 +33,7 @@
             <h1>Slab</h1>
         </nav>
         <article id="main" class="current">
-        <section>
+        <section style="padding-top:0px;padding-bottom:0px;">
             <ul class="list">
             <li>
             <input type="text" id="serverAddress" placeholder="Server address (eg. 192.168.0.1:3000)" style="width: 100%" value="192.168.1.4:3000">
@@ -60,7 +60,7 @@
             <h1>Controls</h1>
         </nav>
         <article id="display" class="next">
-            <section id="displayUI">
+            <section id="displayUI" style="padding-top:0px;padding-bottom:0px;">
             
             </section>
         </article>
@@ -74,10 +74,7 @@
         app.initialize();
     </script>
 
-    <script src="http://192.168.1.4:3000/socket.io/socket.io.js"></script>
-    <script>
-      
-    </script>
+    
 
     <script>
         $("#connectButton").on("singletap", function() {
@@ -101,29 +98,28 @@
                                 socket.emit('event', {id: control.id ,val: $(this).val()});
                             });
                         }else if(control.type == "touch"){
+                            var touchStartEvent = "touchstart"
+                            var touchMoveEvent = "mousemove touchmove"
+                            if(window.navigator.msPointerEnabled){
+                                touchStartEvent = "MSPointerDown"
+                                touchMoveEvent = "MSPointerMove"
+                            }
                             var currentX = 0;
                             var currentY = 0;
-                            $('#'+control.id).on('touchstart',function(e){
+                            var startTouch = false;
+                            $('#'+control.id).on(touchStartEvent,function(e){
                                 e.preventDefault();
-                                  var x=0;
-                                  var y=0;
-                                  if(e.originalEvent.touches || e.originalEvent.changedTouches){
-                                    var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-                                    x=touch.pageX;
-                                    y=touch.pageY;
-
-                                  }else{
-                                    x = e.clientX;
-                                    y = e.clientY;
-                                  }
-                                  currentX = x;
-                                  currentY = y;
+                                startTouch = true;
+                                socket.emit('event', {id: control.id ,val: {type: 'touchstart', x: 0, y: 0}});
                             });
-                            $('#'+control.id).on('mousemove touchmove',function(e){
+                            $('#'+control.id).on(touchMoveEvent,function(e){
                                   e.preventDefault();
                                   var x=0;
                                   var y=0;
-                                  if(e.originalEvent.touches || e.originalEvent.changedTouches){
+                                  if(window.navigator.msPointerEnabled){
+                                    x = e.originalEvent.pageX;
+                                    y = e.originalEvent.pageY;
+                                  }else if(e.originalEvent.touches || e.originalEvent.changedTouches){
                                     var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
                                     x=touch.pageX;
                                     y=touch.pageY;
@@ -136,7 +132,12 @@
                                   var changeY = y - currentY;
                                   currentX = x;
                                   currentY = y;
-                                  socket.emit('event', {id: control.id ,val: {x: changeX, y: changeY}});
+                                  if(!startTouch){
+                                    socket.emit('event', {id: control.id ,val: {type: 'move', x: changeX, y: changeY}});
+                                  }
+                                    
+                                  
+                                  startTouch = false;
                             });
                         }else if(control.type == "form"){
                             $('#'+control.id).on("submit", function(e) {
