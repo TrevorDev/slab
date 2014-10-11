@@ -34,15 +34,18 @@
         </nav>
         <article id="main" class="current">
         <section style="padding-top:0px;padding-bottom:0px;">
+            <form id="addressForm">
             <ul class="list">
             <li>
-            <input type="text" id="serverAddress" placeholder="Server address (eg. 192.168.0.1:3000)" style="width: 100%" value="192.168.1.108:3000">
+            <input type="text" id="serverAddress" placeholder="Server address (eg. 192.168.0.1:3545)" style="width: 100%" value="">
             </li>
             <li class='nav' id="connectButton">
-            <h3>Connect</h3>
+            <!--<input style="" type="submit", value="Connect">-->
+            <button type="submit" style="background: none;border: 0;outline: 0;width:100%;">Connect</button>
+            
             </li>
             </ul>
-
+            </form>
             <!--<ul class="list">
             <li>
             <h4>Found Connections:</h4>
@@ -77,7 +80,13 @@
     
 
     <script>
-        $("#connectButton").on("singletap", function() {
+        var lastConn = window.localStorage.getItem("lastConnection");
+        if(lastConn){
+            $("#serverAddress").val(lastConn);
+        }
+
+        $("#addressForm").on("submit", function() {
+            window.localStorage.setItem("lastConnection", $("#serverAddress").val());
             var serverAddress = "http://"+$("#serverAddress").val();
             $.get( serverAddress+"/html", function( resp ) {
                 $.getScript( serverAddress+"/socket.io/socket.io.js", function( data, textStatus, jqxhr ) {
@@ -158,6 +167,7 @@
                                 socket.emit('event', {id: control.id ,val: eventVal});
                             });
                         }else if(control.type == "compass"){
+                            //TODO UNWATCH ON BACK BUTTON
                              var watchID = navigator.compass.watchHeading(function (heading) {
                                 socket.emit('event', {id: control.id ,val: heading.magneticHeading});
                                 //alert("one");
