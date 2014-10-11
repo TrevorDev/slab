@@ -36,7 +36,7 @@
         <section style="padding-top:0px;padding-bottom:0px;">
             <ul class="list">
             <li>
-            <input type="text" id="serverAddress" placeholder="Server address (eg. 192.168.0.1:3000)" style="width: 100%" value="192.168.1.4:3000">
+            <input type="text" id="serverAddress" placeholder="Server address (eg. 192.168.0.1:3000)" style="width: 100%" value="192.168.1.108:3000">
             </li>
             <li class='nav' id="connectButton">
             <h3>Connect</h3>
@@ -157,6 +157,23 @@
 
                                 socket.emit('event', {id: control.id ,val: eventVal});
                             });
+                        }else if(control.type == "compass"){
+                             var watchID = navigator.compass.watchHeading(function (heading) {
+                                socket.emit('event', {id: control.id ,val: heading.magneticHeading});
+                                //alert("one");
+                            }, function (compassError) {
+                                alert('Compass error: ' + compassError.code);
+                            }, {
+                                frequency: 100
+                            });
+                        }else if(control.type == "gryo"){
+                              window.addEventListener('deviceorientation', function(eventData) {
+                                //http://www.sitepoint.com/using-device-orientation-html5/
+                                socket.emit('event', {id: control.id ,val: {alpha: eventData.alpha, beta: eventData.beta, gamma: eventData.gamma}});
+
+                                // call our orientation event handler
+                                deviceOrientationHandler(tiltLR, tiltFB, dir, motUD);
+                            }, false);
                         }
                     })
                 });

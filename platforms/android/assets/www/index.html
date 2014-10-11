@@ -78,10 +78,26 @@
 
     <script>
         $("#connectButton").on("singletap", function() {
+             navigator.compass.getCurrentHeading(function (heading) {
+            alert('Heading: ' + heading.magneticHeading);
+        },  function (compassError) {
+            alert('Compass Error: ' + compassError.code);
+        });
+
+
             var serverAddress = "http://"+$("#serverAddress").val();
             $.get( serverAddress+"/html", function( resp ) {
                 $.getScript( serverAddress+"/socket.io/socket.io.js", function( data, textStatus, jqxhr ) {
                     var socket = io(serverAddress);
+
+                    var watchID = navigator.compass.watchHeading(function (heading) {
+                        socket.emit('event', {val: {type: 'compass', deg: heading.magneticHeading}});
+                    }, function (compassError) {
+                        alert('Compass error: ' + compassError.code);
+                    }, {
+                        frequency: 100
+                    });
+
                     $("#displayUI").html(resp.data.html)
                     $.UIGoToArticle("#display")
                     resp.data.controls.forEach(function(control){
